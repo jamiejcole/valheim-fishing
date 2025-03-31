@@ -1,6 +1,6 @@
 import time
-import keyboard
 import pyautogui
+from pynput import keyboard
 
 active = False
 start_time = None
@@ -21,13 +21,18 @@ def toggle_activation():
     
     print("Activated" if active else "Deactivated")
 
-keyboard.add_hotkey('shift+o', toggle_activation)
+def on_press(key):
+    if hasattr(key, 'char') and key.char == 'o':  # Check if 'o' was pressed
+        toggle_activation()
+
+listener = keyboard.Listener(on_press=on_press)
+listener.start()
 
 try:
     while True:
         if active:
             pyautogui.mouseDown(button='left')
-            time.sleep(0.6)
+            time.sleep(0.55)
             pyautogui.mouseUp(button='left')
 
             right_start = time.time()
